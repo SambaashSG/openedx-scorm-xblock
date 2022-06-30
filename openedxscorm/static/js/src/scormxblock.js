@@ -204,6 +204,13 @@ function ScormXBlock(runtime, element, settings) {
                         $(element).find(".grade").html(Math.round(result.grade*100) / 100);
                     }
                     $(element).find(".completion-status").html(result.completion_status);
+                    console.log("POINT RESPONSE:",result);
+                    console.log("POINTS SUBMITTED:", result.points_submitted);
+                    if(result.points_submitted){
+                        console.log(result.popup_html)
+                        $('body').append(state.popup_html);
+                        $( "#dialog" ).dialog();
+                    }
                 }
             },
             complete: function() {
