@@ -423,11 +423,11 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
             self.emit_completion(1)
             try:
                 from xmodule.gamification import share_gamification_user_points
-                gamification_resp = share_gamification_user_points(self, check_eligibility=False)
+                gamification_resp = share_gamification_user_points(self)
                 context.update(gamification_resp)
-                log.error("GAMIFICATION_RESPONSE:", gamification_resp)
+                logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
             except Exception as e:
-                log.error(f"GAMIFICATION ERROR: {e}")
+                logger.error(f"GAMIFICATION ERROR: {e}")
         if success_status or completion_status == "completed":
             if self.has_score:
                 self.publish_grade()
