@@ -423,7 +423,7 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
             self.emit_completion(1)
             try:
                 from xmodule.gamification import share_gamification_user_points
-                gamification_resp = share_gamification_user_points(self)
+                gamification_resp = share_gamification_user_points(self, check_eligibility=False)
                 context.update(gamification_resp)
                 logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
             except Exception as e:
