@@ -208,7 +208,7 @@ function ScormXBlock(runtime, element, settings) {
                     console.log("POINTS SUBMITTED:", result.points_submitted);
                     if(result.points_submitted){
                         console.log(result.popup_html)
-                        $('body').append(state.popup_html);
+                        $('body').append(result.popup_html);
                         $( "#dialog" ).dialog();
                     }
                 }
