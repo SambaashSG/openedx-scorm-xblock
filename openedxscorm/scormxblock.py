@@ -391,7 +391,8 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
         success_status = None
         completion_status = None
         lesson_score = None
-
+        logger.error("#################################")
+        logger.error(data)
         self.scorm_data[name] = value
         if name == "cmi.core.lesson_status":
             lesson_status = data.get("value")
