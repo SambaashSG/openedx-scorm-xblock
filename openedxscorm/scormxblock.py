@@ -40,6 +40,10 @@ def _(text):
 
 
 logger = logging.getLogger(__name__)
+SCORM_ROOT = os.path.join(settings.MEDIA_ROOT, 'scorm')
+SCORM_URL = os.path.join(settings.MEDIA_URL, 'scorm')
+
+SCORM_ZIP_ROOT = os.path.join(settings.MEDIA_ROOT, 'scorm_zip')
 
 
 @XBlock.wants("settings")
@@ -256,6 +260,7 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
         try:
             self.extract_package(package_file)
             self.update_package_fields()
+            self._store_scorm_zip_file(package_file)
         except ScormError as e:
             response["errors"].append(e.args[0])
 
@@ -271,7 +276,8 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
             {
                 "index_page_url": self.index_page_url,
                 "width": self.width or 800,
-                "height": self.height or 800
+                "height": self.height or 800,
+                "download_url": self._get_scorm_zip_path()
             },
         )
         return Response(body=rendered)
@@ -689,6 +695,39 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
         if not settings_service:
             return {}
         return settings_service.get_settings_bucket(self)
+
+    def _get_scorm_zip_path(self):
+        path = (
+            '{root}/{block_id}{ext}'.format(
+                root=SCORM_ZIP_ROOT,
+                block_id=self.location.block_id,
+                ext=os.path.splitext(self.package_meta['name'])[1]
+            )
+        )
+        return path
+
+    def _store_scorm_zip_file(self, file):
+        # if not os.path.exists(SCORM_ZIP_ROOT):
+        #     os.mkdir(SCORM_ZIP_ROOT)
+        path = self._get_scorm_zip_path()
+        logger.info("SCORM_ZIP_PATH:", path)
+        fs = FileSystemStorage(location=SCORM_ZIP_ROOT)
+        file_name = "{block_id}{ext}".format(
+            block_id=self.location.block_id, ext=os.path.splitext(self.package_meta['name'])[1])
+        logger.info("SCORM_FILE_NAME:",file_name)
+        if default_storage.exists(path):
+            logger.info('Removing previously uploaded "{}"'.format(path))
+            default_storage.delete(path)
+
+        filename = fs.save(file_name, file)
+        logger.info("SAVED_FILE_NAME:", file_name)
+
+        # Upload scorm zip files to Amazon s3 bucket: Sahil Patel
+        # s3_storage = get_storage_class('openedx.core.storage.S3ReportStorage')(acl='public-read')
+        # if s3_storage.exists(path):
+        #     s3_storage.delete(path)
+        # s3_storage.save('scorm_zip/' + file_name, file)
+        logger.info('{} uploaded to S3 successfully.'.format(filename))
 
 
 def parse_int(value, default):
