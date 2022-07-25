@@ -21,6 +21,8 @@ from xblock.core import XBlock
 from xblock.completable import CompletableXBlockMixin
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Scope, String, Float, Boolean, Dict, DateTime, Integer
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 try:
     try:
@@ -710,24 +712,24 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
         # if not os.path.exists(SCORM_ZIP_ROOT):
         #     os.mkdir(SCORM_ZIP_ROOT)
         path = self._get_scorm_zip_path()
-        logger.info("SCORM_ZIP_PATH:", path)
         fs = FileSystemStorage(location=SCORM_ZIP_ROOT)
         file_name = "{block_id}{ext}".format(
             block_id=self.location.block_id, ext=os.path.splitext(self.package_meta['name'])[1])
-        logger.info("SCORM_FILE_NAME:",file_name)
-        if default_storage.exists(path):
-            logger.info('Removing previously uploaded "{}"'.format(path))
-            default_storage.delete(path)
+        if not settings.ENABLE_SCORM_S3_UPLOAD:
+            if default_storage.exists(path):
+                logger.info('Removing previously uploaded "{}"'.format(path))
+                default_storage.delete(path)
 
-        filename = fs.save(file_name, file)
-        logger.info("SAVED_FILE_NAME:", file_name)
-
-        # Upload scorm zip files to Amazon s3 bucket: Sahil Patel
-        # s3_storage = get_storage_class('openedx.core.storage.S3ReportStorage')(acl='public-read')
-        # if s3_storage.exists(path):
-        #     s3_storage.delete(path)
-        # s3_storage.save('scorm_zip/' + file_name, file)
-        logger.info('{} uploaded to S3 successfully.'.format(filename))
+            # filename = fs.save(file_name, file)
+            fs.save(file_name, file)
+            logger.info(f'{file_name} uploaded to in scorm_zip successfully.')
+        else:
+            # Upload scorm zip files to Amazon s3 bucket: Sahil Patel
+            s3_storage = get_storage_class('openedx.core.storage.S3ReportStorage')(acl='public-read')
+            if s3_storage.exists(path):
+                s3_storage.delete(path)
+            s3_storage.save('scorm_zip/' + file_name, file)
+            logger.info(f'{file_name} uploaded to S3 successfully.')
 
 
 def parse_int(value, default):
