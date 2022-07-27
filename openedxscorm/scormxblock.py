@@ -715,7 +715,12 @@ class ScormXBlock(XBlock, CompletableXBlockMixin):
         fs = FileSystemStorage(location=SCORM_ZIP_ROOT)
         file_name = "{block_id}{ext}".format(
             block_id=self.location.block_id, ext=os.path.splitext(self.package_meta['name'])[1])
-        if not settings.ENABLE_SCORM_S3_UPLOAD:
+        try:
+            s3_enabled = settings.ENABLE_SCORM_S3_UPLOAD
+        except Exception as e:
+            print("ENABLE_SCORM_S3_UPLOAD NOT FOUND")
+            s3_enabled = False
+        if not s3_enabled:
             if default_storage.exists(path):
                 logger.info('Removing previously uploaded "{}"'.format(path))
                 default_storage.delete(path)
