@@ -142,6 +142,7 @@ function ScormXBlock(runtime, element, settings) {
                 async: false
             });
             console.log("GetValue function: Data:");
+            console.log("URL:"+getValueUrl);
             console.log(JSON.stringify({'name': cmi_element}));
             response = JSON.parse(response.responseText);
             return response.value;
@@ -193,9 +194,10 @@ function ScormXBlock(runtime, element, settings) {
                 'name': cmi_element,
                 'value': value
             })
-            console.log("------------scormxblock.js: setValue-> setValueAsync->processSetValueQueueItems->data")
-            console.log(data);
         }
+        console.log("------------scormxblock.js: setValue-> setValueAsync->processSetValueQueueItems->data")
+        console.log("SETURL:"+setValuesUrl)
+        console.log(data);
         $.ajax({
             type: "POST",
             url: setValuesUrl,
@@ -215,10 +217,16 @@ function ScormXBlock(runtime, element, settings) {
                         $('body').append(result.popup_html);
                         $( "#dialog" ).dialog();
                     }
+                    console.log("------------scormxblock.js: processSetValueQueueItems->AJAX-> SUCCESS")
+                    console.log("SETURL:"+setValuesUrl)
+                    console.log(data);
                 }
             },
             complete: function() {
                 // Recursive call to itself
+                console.log("------------scormxblock.js: processSetValueQueueItems->AJAX-> COMPLETE")
+                console.log("SETURL:"+setValuesUrl)
+                console.log(data);
                 processSetValueQueueItems();
             }
         });
