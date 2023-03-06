@@ -141,6 +141,8 @@ function ScormXBlock(runtime, element, settings) {
                 }),
                 async: false
             });
+            console.log("GetValue function: Data:");
+            console.log(JSON.stringify({'name': cmi_element}));
             response = JSON.parse(response.responseText);
             return response.value;
         } else if (cmi_element in settings.scorm_data) {
@@ -191,6 +193,8 @@ function ScormXBlock(runtime, element, settings) {
                 'name': cmi_element,
                 'value': value
             })
+            console.log("------------scormxblock.js: setValue-> setValueAsync->processSetValueQueueItems->data")
+            console.log(data);
         }
         $.ajax({
             type: "POST",

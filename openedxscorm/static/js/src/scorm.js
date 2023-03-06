@@ -1,20 +1,26 @@
 function SCORM_12_API(GetValue, SetValue) {
   this.LMSInitialize = function() {
+    console.log("SCORM_12_LMSInitialize");
     return "true";
   };
   this.LMSFinish = function() {
+    console.log("SCORM_12_LMSFinish");
     return "true";
   };
   this.LMSCommit = function() {
+    console.log("SCORM_12_LMSCommit");
     return "true";
   };
   this.LMSGetLastError = function() {
+    console.log("SCORM_12_LMSGetLastError");
     return "0";
   };
   this.LMSGetErrorString = function(errorCode) {
+    console.log("SCORM_12_LMSGetErrorString");
     return "Some Error";
   };
   this.LMSGetDiagnostic = function(errorCode) {
+    console.log("SCORM_12_LMSGetDiagnostic");
     return "Some Diagnostic";
   };
   this.LMSGetValue = GetValue;
@@ -23,21 +29,27 @@ function SCORM_12_API(GetValue, SetValue) {
 
 function SCORM_2004_API(GetValue, SetValue) {
   this.Initialize = function() {
+    console.log("SCORM_12_Initialize");
     return "true";
   };
   this.Terminate = function() {
+    console.log("SCORM_12_Terminate");
     return "true";
   };
   this.Commit = function() {
+    console.log("SCORM_12_Commit");
     return "true";
   };
   this.GetLastError = function() {
+    console.log("SCORM_12_GetLastError");
     return "0";
   };
   this.GetErrorString = function(errorCode) {
+    console.log("SCORM_12_GetErrorString");
     return "Some Error";
   };
   this.GetDiagnostic = function(errorCode) {
+    console.log("SCORM_12_GetDiagnostic");
     return "Some Diagnostic";
   };
   this.GetValue = GetValue;
