@@ -132,6 +132,9 @@ function ScormXBlock(runtime, element, settings) {
     ];
     var getValueUrl = runtime.handlerUrl(element, 'scorm_get_value');
     var GetValue = function(cmi_element) {
+        console.log("GetValue function invoked:");
+        console.log("settings.scorm_data:");
+        console.log(settings.scorm_data);
         if (cmi_element in uncachedValues) {
             var response = $.ajax({
                 type: "POST",
@@ -141,12 +144,13 @@ function ScormXBlock(runtime, element, settings) {
                 }),
                 async: false
             });
-            console.log("GetValue function: Data:");
+            console.log("GetValue function inside IF statement: Data:");
             console.log("URL:"+getValueUrl);
             console.log(JSON.stringify({'name': cmi_element}));
             response = JSON.parse(response.responseText);
             return response.value;
         } else if (cmi_element in settings.scorm_data) {
+            console.log("GetValue function inside else statement:");
             return settings.scorm_data[cmi_element];
         }
         return "";
