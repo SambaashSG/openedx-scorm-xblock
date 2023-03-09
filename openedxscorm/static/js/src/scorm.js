@@ -29,27 +29,27 @@ function SCORM_12_API(GetValue, SetValue) {
 
 function SCORM_2004_API(GetValue, SetValue) {
   this.Initialize = function() {
-    console.log("SCORM_12_Initialize");
+    console.log("SCORM_2004_Initialize");
     return "true";
   };
   this.Terminate = function() {
-    console.log("SCORM_12_Terminate");
+    console.log("SCORM_2004_Terminate");
     return "true";
   };
   this.Commit = function() {
-    console.log("SCORM_12_Commit");
+    console.log("SCORM_2004_Commit");
     return "true";
   };
   this.GetLastError = function() {
-    console.log("SCORM_12_GetLastError");
+    console.log("SCORM_2004_GetLastError");
     return "0";
   };
   this.GetErrorString = function(errorCode) {
-    console.log("SCORM_12_GetErrorString");
+    console.log("SCORM_2004_GetErrorString");
     return "Some Error";
   };
   this.GetDiagnostic = function(errorCode) {
-    console.log("SCORM_12_GetDiagnostic");
+    console.log("SCORM_2004_GetDiagnostic");
     return "Some Diagnostic";
   };
   this.GetValue = GetValue;
