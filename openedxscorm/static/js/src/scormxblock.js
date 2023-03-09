@@ -132,9 +132,7 @@ function ScormXBlock(runtime, element, settings) {
     ];
     var getValueUrl = runtime.handlerUrl(element, 'scorm_get_value');
     var GetValue = function(cmi_element) {
-        console.log("GetValue function invoked:");
-        console.log("settings.scorm_data:");
-        console.log(settings.scorm_data);
+        console.log("SCORM_GET event >" + cmi_element);
         if (cmi_element in uncachedValues) {
             var response = $.ajax({
                 type: "POST",
@@ -144,13 +142,11 @@ function ScormXBlock(runtime, element, settings) {
                 }),
                 async: false
             });
-            console.log("GetValue function inside IF statement: Data:");
-            console.log("URL:"+getValueUrl);
-            console.log(JSON.stringify({'name': cmi_element}));
+            console.log("SCORM_GET event >" + response.responseText);
             response = JSON.parse(response.responseText);
             return response.value;
         } else if (cmi_element in settings.scorm_data) {
-            console.log("GetValue function inside else statement:");
+            console.log("SCORM_GET event >" + JSON.stringify(settings.scorm_data));
             return settings.scorm_data[cmi_element];
         }
         return "";
@@ -168,6 +164,11 @@ function ScormXBlock(runtime, element, settings) {
                 enterFullscreen();
             }
         }
+        var obj = {
+            name: cmi_element,
+            value: value
+        };
+        console.log("SCORM_SET event >" + JSON.stringify(obj));
         SetValueAsync(cmi_element, value);
         return "true";
     }
@@ -199,9 +200,6 @@ function ScormXBlock(runtime, element, settings) {
                 'value': value
             })
         }
-        console.log("------------scormxblock.js: setValue-> setValueAsync->processSetValueQueueItems->data")
-        console.log("SETURL:"+setValuesUrl)
-        console.log(data);
         $.ajax({
             type: "POST",
             url: setValuesUrl,
@@ -221,16 +219,10 @@ function ScormXBlock(runtime, element, settings) {
                         $('body').append(result.popup_html);
                         $( "#dialog" ).dialog();
                     }
-                    console.log("------------scormxblock.js: processSetValueQueueItems->AJAX-> SUCCESS")
-                    console.log("SETURL:"+setValuesUrl)
-                    console.log(data);
                 }
             },
             complete: function() {
                 // Recursive call to itself
-                console.log("------------scormxblock.js: processSetValueQueueItems->AJAX-> COMPLETE")
-                console.log("SETURL:"+setValuesUrl)
-                console.log(data);
                 processSetValueQueueItems();
             }
         });
