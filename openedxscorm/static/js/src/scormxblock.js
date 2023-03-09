@@ -168,7 +168,7 @@ function ScormXBlock(runtime, element, settings) {
             name: cmi_element,
             value: value
         };
-        console.log("SCORM_SET event >" + JSON.stringify(obj));
+        console.log("SCORM_SET_DEVICE_DB>" + JSON.stringify(obj));
         SetValueAsync(cmi_element, value);
         return "true";
     }
